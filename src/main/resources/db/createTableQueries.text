@@ -1,0 +1,81 @@
+CREATE TABLE `department` (
+  `seq` int NOT NULL AUTO_INCREMENT,
+  `department_name` varchar(50) NOT NULL,
+  `location` varchar(50) DEFAULT NULL,
+  `total_employees` int DEFAULT '0',
+  `total_projects` int DEFAULT '0',
+  `created_by` varchar(20) NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_by` varchar(20) DEFAULT NULL,
+  `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `department_name_UNIQUE` (`department_name`),
+  CONSTRAINT `department_chk_1` CHECK ((`total_employees` >= 0)),
+  CONSTRAINT `department_chk_2` CHECK ((`total_projects` >= 0))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `department_project` (
+  `department_seq` int NOT NULL,
+  `project_seq` int NOT NULL,
+  PRIMARY KEY (`department_seq`,`project_seq`),
+  KEY `project_seq` (`project_seq`),
+  CONSTRAINT `department_project_ibfk_1` FOREIGN KEY (`department_seq`) REFERENCES `department` (`seq`),
+  CONSTRAINT `department_project_ibfk_2` FOREIGN KEY (`project_seq`) REFERENCES `project` (`seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `project` (
+  `seq` int NOT NULL AUTO_INCREMENT,
+  `project_name` varchar(50) NOT NULL,
+  `project_description` text,
+  `project_status` varchar(20) DEFAULT NULL,
+  `budget` decimal(10,2) DEFAULT NULL,
+  `start_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `end_date` timestamp NULL DEFAULT NULL,
+  `created_by` varchar(20) NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_by` varchar(20) NOT NULL,
+  `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `employee` (
+  `seq` int NOT NULL AUTO_INCREMENT,
+  `employee_name` varchar(20) NOT NULL,
+  `position_is` varchar(50) NOT NULL,
+  `phone_number` varchar(15) DEFAULT NULL,
+  `hire_date` date NOT NULL,
+  `department_seq` int DEFAULT NULL,
+  `manager_seq` int DEFAULT NULL,
+  `vendor_seq` int DEFAULT NULL,
+  `created_by` varchar(20) NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_by` varchar(20) DEFAULT NULL,
+  `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  KEY `department_seq` (`department_seq`),
+  KEY `manager_seq` (`manager_seq`),
+  KEY `vendor_seq` (`vendor_seq`),
+  CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`department_seq`) REFERENCES `department` (`seq`),
+  CONSTRAINT `employee_ibfk_2` FOREIGN KEY (`manager_seq`) REFERENCES `employee` (`seq`),
+  CONSTRAINT `employee_ibfk_3` FOREIGN KEY (`vendor_seq`) REFERENCES `vendor` (`seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `employee_project` (
+  `employee_seq` int NOT NULL,
+  `project_seq` int NOT NULL,
+  PRIMARY KEY (`employee_seq`,`project_seq`),
+  KEY `project_seq` (`project_seq`),
+  CONSTRAINT `employee_project_ibfk_1` FOREIGN KEY (`employee_seq`) REFERENCES `employee` (`seq`),
+  CONSTRAINT `employee_project_ibfk_2` FOREIGN KEY (`project_seq`) REFERENCES `project` (`seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `vendor` (
+  `seq` int NOT NULL AUTO_INCREMENT,
+  `vendor_name` varchar(50) NOT NULL,
+  `contact` varchar(50) NOT NULL,
+  `created_by` varchar(20) NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_by` varchar(20) NOT NULL,
+  `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
