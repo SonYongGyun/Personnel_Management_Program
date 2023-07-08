@@ -57,7 +57,7 @@ public class TutorialServletContainer extends HttpServlet {
 
       var pst = conn.prepareStatement(QueryManager.getQuery("SELECT_ALL_DEPARTMENT"));
       var rs = pst.executeQuery();
-      String rss = "";
+      String rss = "No result";
       if (rs.next()) {
         rss = rs.getString("department_name");
       }
