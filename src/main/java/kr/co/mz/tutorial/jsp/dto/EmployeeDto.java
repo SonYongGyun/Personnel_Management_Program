@@ -18,6 +18,7 @@ public class EmployeeDto extends AbstractDto {
   private long vendorSeq;
   private Set<EmployeeDto> managingEmployeesSet = new LinkedHashSet<>();
 
+  private Set<ProjectDto> joinedProjectSet = new LinkedHashSet<>();
 
   public EmployeeDto() {
   }
@@ -139,6 +140,18 @@ public class EmployeeDto extends AbstractDto {
 
   public void addManagingEmployee(EmployeeDto employeeDto) {
     managingEmployeesSet.add(employeeDto);
+  }
+
+  public Set<ProjectDto> getJoinedProjectSet() {
+    return joinedProjectSet;
+  }
+
+  public void setJoinedProjectSet(Set<ProjectDto> joinedProjectSet) {
+    this.joinedProjectSet = joinedProjectSet;
+  }
+
+  public void addJoinedProjectSet(ProjectDto projectDto) {
+    joinedProjectSet.add(projectDto);
   }
 
   public EmployeeDto fromResultSet(ResultSet rs) {

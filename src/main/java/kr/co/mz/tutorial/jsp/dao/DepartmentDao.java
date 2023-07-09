@@ -18,9 +18,15 @@ public class DepartmentDao {
   }
 
   public List<DepartmentDto> findAll() throws SQLException {
-    try (var conn = dataSource.getConnection()) {
-      var pst = conn.prepareStatement(QueryManager.getQuery("SELECT_ALL_DEPARTMENT"));
-      var rs = pst.executeQuery();
+    //일반적으로 직원이 프로젝트보다 많다. 그러니 부서와 프로젝트를 가져오고. 직원을 가져오자.
+    try (
+        var conn = dataSource.getConnection();
+        var selectDepartmentWithProjects = conn.prepareStatement(
+            QueryManager.getQuery("SELECT_DEPARTMENT_WITH_PROJECTS"));
+        var selectDepartmentWithEmployees = conn.prepareStatement(
+            QueryManager.getQuery("SELECT_DEPARTMENT_WITH_EMPLOYEES"))
+    ) {
+      var rs = selectDepartmentWithProjects.executeQuery();
       var departmentList = new ArrayList<DepartmentDto>();
       while (rs.next()) {
         var departmentDto = new DepartmentDto().fromResultSet(rs);

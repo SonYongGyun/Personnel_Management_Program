@@ -9,6 +9,7 @@ public class CreateMain {
 
   public static void main(String[] args) throws IOException, SQLException {
     // 부서 3개, 프로젝트 3개, 직원 5명, 협력사 2개.
+
     for (int i = 0; i < 100; i++) {
       var dto = new EmployeeDto();
       dto.setEmployeeName("SlaveNoledge");
