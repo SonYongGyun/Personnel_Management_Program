@@ -155,6 +155,7 @@ public class ProjectDto extends AbstractDto {
       projectDto.setBudget(rs.getBigDecimal("P.budget"));
       projectDto.setStartDate(rs.getTimestamp("P.start_date"));
       projectDto.setEndDate(rs.getTimestamp("P.end_date"));
+
       projectDto.setCreatedBy(rs.getString("P.created_by"));
       projectDto.setCreatedTime(rs.getTimestamp("P.created_time"));
       projectDto.setModifiedBy(rs.getString("P.modified_by"));
@@ -166,4 +167,25 @@ public class ProjectDto extends AbstractDto {
       return new ProjectDto();
     }
   }
+
+  @Override
+  public String toString() {
+    return "ProjectDto{" +
+        "seq=" + seq +
+        ", projectName='" + projectName + '\'' +
+        ", projectDescription='" + projectDescription + '\'' +
+        ", projectStatus='" + projectStatus + '\'' +
+        ", budget=" + budget +
+        ", startDate=" + startDate +
+        ", endDate=" + endDate +
+        ", joinedDepartmentsSet=" + joinedDepartmentsSet +
+        ", joinedEmployeesSet=" + joinedEmployeesSet +
+        ", createdBy='" + createdBy + '\'' +
+        ", createdTime=" + createdTime +
+        ", modifiedBy='" + modifiedBy + '\'' +
+        ", modifiedTime=" + modifiedTime +
+        '}';
+  }
+
+
 }

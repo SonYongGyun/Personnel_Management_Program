@@ -1,6 +1,5 @@
 package kr.co.mz.tutorial.jsp.dao;
 
-import jakarta.servlet.ServletContext;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import kr.co.mz.tutorial.jsp.db.QueryManager;
@@ -10,8 +9,8 @@ public class VendorDao {
 
   public DataSource dataSource;
 
-  public VendorDao(ServletContext servletContext) {
-    this.dataSource = (DataSource) servletContext.getAttribute("dataSource");
+  public VendorDao(DataSource dataSource) {
+    this.dataSource = dataSource;
   }
 
   public void insertOne(VendorDto vendorDto) {

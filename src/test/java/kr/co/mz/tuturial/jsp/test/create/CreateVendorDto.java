@@ -1,4 +1,4 @@
-package kr.co.mz.tuturial.jsp.test;
+package kr.co.mz.tuturial.jsp.test.create;
 
 import kr.co.mz.tutorial.jsp.dto.VendorDto;
 

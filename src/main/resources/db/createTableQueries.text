@@ -12,7 +12,8 @@ CREATE TABLE `department` (
   UNIQUE KEY `department_name_UNIQUE` (`department_name`),
   CONSTRAINT `department_chk_1` CHECK ((`total_employees` >= 0)),
   CONSTRAINT `department_chk_2` CHECK ((`total_projects` >= 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `department_project` (
   `department_seq` int NOT NULL,
@@ -22,6 +23,7 @@ CREATE TABLE `department_project` (
   CONSTRAINT `department_project_ibfk_1` FOREIGN KEY (`department_seq`) REFERENCES `department` (`seq`),
   CONSTRAINT `department_project_ibfk_2` FOREIGN KEY (`project_seq`) REFERENCES `project` (`seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `project` (
   `seq` int NOT NULL AUTO_INCREMENT,
@@ -33,10 +35,11 @@ CREATE TABLE `project` (
   `end_date` timestamp NULL DEFAULT NULL,
   `created_by` varchar(20) NOT NULL,
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modified_by` varchar(20) NOT NULL,
+  `modified_by` varchar(20) DEFAULT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `employee` (
   `seq` int NOT NULL AUTO_INCREMENT,
@@ -60,6 +63,7 @@ CREATE TABLE `employee` (
   CONSTRAINT `employee_ibfk_3` FOREIGN KEY (`vendor_seq`) REFERENCES `vendor` (`seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
 CREATE TABLE `employee_project` (
   `employee_seq` int NOT NULL,
   `project_seq` int NOT NULL,
@@ -69,13 +73,14 @@ CREATE TABLE `employee_project` (
   CONSTRAINT `employee_project_ibfk_2` FOREIGN KEY (`project_seq`) REFERENCES `project` (`seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
 CREATE TABLE `vendor` (
   `seq` int NOT NULL AUTO_INCREMENT,
   `vendor_name` varchar(50) NOT NULL,
   `contact` varchar(50) NOT NULL,
   `created_by` varchar(20) NOT NULL,
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modified_by` varchar(20) NOT NULL,
+  `modified_by` varchar(20) DEFAULT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DepartmentDto extends AbstractDto {
 
@@ -118,11 +119,12 @@ public class DepartmentDto extends AbstractDto {
   public DepartmentDto fromResultSet(ResultSet rs) {
     try {
       var departmentDto = new DepartmentDto();
-
+      departmentDto.setSeq(rs.getLong("D.seq"));
       departmentDto.setDepartmentName(rs.getString("D.department_name"));
       departmentDto.setLocation(rs.getString("D.location"));
       departmentDto.setTotalEmployees(rs.getInt("D.total_employees"));
       departmentDto.setTotalProjects(rs.getInt("D.total_projects"));
+
       departmentDto.setCreatedBy(rs.getString("D.created_by"));
       departmentDto.setCreatedTime(rs.getTimestamp("D.created_time"));
       departmentDto.setModifiedBy(rs.getString("D.modified_by"));
@@ -135,5 +137,20 @@ public class DepartmentDto extends AbstractDto {
     }
   }
 
-
+  @Override
+  public String toString() {
+    return "DepartmentDto{" +
+        "seq=" + seq +
+        ", departmentName='" + departmentName + '\'' +
+        ", location='" + location + '\'' +
+        ", totalEmployees=" + totalEmployees +
+        ", totalProjects=" + totalProjects +
+        ", createdBy='" + createdBy + '\'' +
+        ", createdTime=" + createdTime +
+        ", modifiedBy='" + modifiedBy + '\'' +
+        ", modifiedTime=" + modifiedTime +
+        ",\nemployeesSet= \n" + employeesSet.stream().map(EmployeeDto::toString).collect(Collectors.joining("\n ")) +
+        "\nprojectsSet=\n " + projectsSet.stream().map(ProjectDto::toString).collect(Collectors.joining("\n ")) +
+        "\n}\n\n";
+  }
 }

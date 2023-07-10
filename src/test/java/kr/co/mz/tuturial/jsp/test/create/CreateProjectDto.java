@@ -1,4 +1,4 @@
-package kr.co.mz.tuturial.jsp.test;
+package kr.co.mz.tuturial.jsp.test.create;
 
 import java.math.BigDecimal;
 import kr.co.mz.tutorial.jsp.dto.ProjectDto;
@@ -10,7 +10,7 @@ public class CreateProjectDto {
     dto.setProjectName("MegaBird");
     dto.setProjectDescription("Corp.MagaZone's Message Service.");
     dto.setProjectStatus("운영중");
-    dto.setBudget(BigDecimal.valueOf(1000000000));
+    dto.setBudget(BigDecimal.valueOf(15000.200));
     dto.setCreatedBy("admin");
     return dto;
   }
@@ -20,7 +20,7 @@ public class CreateProjectDto {
     dto.setProjectName("DocsWave");
     dto.setProjectDescription("Corp.MagaZone's Document Service(?).");
     dto.setProjectStatus("운영중");
-    dto.setBudget(BigDecimal.valueOf(1000000000));
+    dto.setBudget(BigDecimal.valueOf(1090.300));
     dto.setCreatedBy("admin");
     return dto;
   }

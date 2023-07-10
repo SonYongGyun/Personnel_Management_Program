@@ -157,7 +157,7 @@ public class EmployeeDto extends AbstractDto {
   public EmployeeDto fromResultSet(ResultSet rs) {
     try {
       var employeeDto = new EmployeeDto();
-
+      employeeDto.setSeq(rs.getLong("E.seq"));
       employeeDto.setEmployeeName(rs.getString("E.employee_name"));
       employeeDto.setPositionIs(rs.getString("E.position_is"));
       employeeDto.setPhoneNumber(rs.getString("E.phone_number"));
@@ -165,8 +165,9 @@ public class EmployeeDto extends AbstractDto {
       employeeDto.setDepartmentSeq(rs.getLong("E.department_seq"));
       employeeDto.setManagerSeq(rs.getLong("E.manager_seq"));
       employeeDto.setVendorSeq(rs.getLong("E.vendor_seq"));
+
       employeeDto.setCreatedBy(rs.getString("E.created_by"));
-      employeeDto.setCreatedTime(rs.getTimestamp("E.create_time"));
+      employeeDto.setCreatedTime(rs.getTimestamp("E.created_time"));
       employeeDto.setModifiedBy(rs.getString("E.modified_by"));
       employeeDto.setModifiedTime(rs.getTimestamp("E.modified_time"));
 
@@ -178,4 +179,23 @@ public class EmployeeDto extends AbstractDto {
     }
   }
 
+  @Override
+  public String toString() {
+    return "EmployeeDto{" +
+        "seq=" + seq +
+        ", employeeName='" + employeeName + '\'' +
+        ", positionIs='" + positionIs + '\'' +
+        ", phoneNumber='" + phoneNumber + '\'' +
+        ", hireDate=" + hireDate +
+        ", departmentSeq=" + departmentSeq +
+        ", managerSeq=" + managerSeq +
+        ", vendorSeq=" + vendorSeq +
+        ", managingEmployeesSet=" + managingEmployeesSet +
+        ", joinedProjectSet=" + joinedProjectSet +
+        ", createdBy='" + createdBy + '\'' +
+        ", createdTime=" + createdTime +
+        ", modifiedBy='" + modifiedBy + '\'' +
+        ", modifiedTime=" + modifiedTime +
+        '}';
+  }
 }

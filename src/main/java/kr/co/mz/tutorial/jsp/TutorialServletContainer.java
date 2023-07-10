@@ -8,8 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
+import kr.co.mz.tutorial.jsp.dao.DepartmentDao;
 import kr.co.mz.tutorial.jsp.db.HikariCPListener;
-import kr.co.mz.tutorial.jsp.db.QueryManager;
+import kr.co.mz.tutorial.jsp.dto.DepartmentDto;
 
 
 public class TutorialServletContainer extends HttpServlet {
@@ -51,25 +53,23 @@ public class TutorialServletContainer extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     var dataSource = (HikariDataSource) getServletContext().getAttribute("dataSource");
-    try (
-        var conn = dataSource.getConnection();
-    ) {
-
-      var pst = conn.prepareStatement(QueryManager.getQuery("SELECT_ALL_DEPARTMENT"));
-      var rs = pst.executeQuery();
-      String rss = "No result";
-      if (rs.next()) {
-        rss = rs.getString("department_name");
-      }
-
+    var departmentDao = new DepartmentDao(dataSource);
+    List<DepartmentDto> list = null;
+    try {
+      list = departmentDao.findAll();
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
       out.println("<html><body>");
-      out.println("<h1>Department Name: " + rss + "</h1>");
+      for (DepartmentDto d : list) {
+        out.println("<h1>Department Name: " + d + "</h1>");
+      }
       out.println("</body></html>");
+
+
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
+
   }
 
 
