@@ -1,4 +1,4 @@
-package kr.co.mz.tutorial.jsp.util;
+package kr.co.mz.tutorial.util;
 
 
 public class ThreadTutorial {

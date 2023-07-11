@@ -1,6 +1,6 @@
 package kr.co.mz.tuturial.jsp.test.create;
 
-import kr.co.mz.tutorial.jsp.dto.VendorDto;
+import kr.co.mz.tutorial.dto.VendorDto;
 
 public class CreateVendorDto {
 

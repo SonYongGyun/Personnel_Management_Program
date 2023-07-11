@@ -1,4 +1,4 @@
-package kr.co.mz.tutorial.jsp.db;
+package kr.co.mz.tutorial.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

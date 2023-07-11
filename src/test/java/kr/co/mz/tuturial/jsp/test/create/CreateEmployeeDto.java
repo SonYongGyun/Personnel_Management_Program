@@ -2,7 +2,7 @@ package kr.co.mz.tuturial.jsp.test.create;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import kr.co.mz.tutorial.jsp.dto.EmployeeDto;
+import kr.co.mz.tutorial.dto.EmployeeDto;
 
 public class CreateEmployeeDto {
 

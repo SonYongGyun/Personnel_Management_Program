@@ -5,8 +5,10 @@
 </head>
 <body>
     <h1>Welcome to Simple Servlet Container</h1>
-    <p>Click <a href="hello">무다무다무다무다무다</a> to see the servlet response.</p>
-    <h1>RSS: ${rss}</h1>
+    <p><a href="departmentList">departmentList</a></p>
+    <p><a href="employeeList">employeeList</a></p>
+    <p><a href="projectList">projectList</a></p>
+    <p><a href="VendorList">VendorList</a></p>
 
 </body>
 </html>

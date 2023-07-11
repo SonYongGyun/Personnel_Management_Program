@@ -1,4 +1,4 @@
-package kr.co.mz.tutorial.jsp.dto;
+package kr.co.mz.tutorial.dto;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;

@@ -1,7 +1,7 @@
 package kr.co.mz.tuturial.jsp.test.create;
 
 import java.math.BigDecimal;
-import kr.co.mz.tutorial.jsp.dto.ProjectDto;
+import kr.co.mz.tutorial.dto.ProjectDto;
 
 public class CreateProjectDto {
 

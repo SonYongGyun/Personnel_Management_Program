@@ -1,4 +1,4 @@
-package kr.co.mz.tutorial.jsp.db;
+package kr.co.mz.tutorial.db;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,10 +6,10 @@ import java.util.Properties;
 
 public class QueryManager {
 
-  private static final String QUERY_FILE = "db/queries.properties";
-  private static Properties properties;
+  private final String QUERY_FILE = "db/queries.properties";
+  private Properties properties;
 
-  static {//객체를 초기화 하는 방법. 다른 클래스들은 이거 못쓰나?
+  {//객체를 초기화 하는 방법.
     properties = new Properties();
     InputStream inputStream;
     try {
@@ -20,7 +20,7 @@ public class QueryManager {
     }
   }
 
-  public static String getQuery(String key) {
+  public String getQuery(String key) {
     return properties.getProperty(key);
   }
 

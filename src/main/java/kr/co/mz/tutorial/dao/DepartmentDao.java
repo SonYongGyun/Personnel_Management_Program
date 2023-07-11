@@ -1,29 +1,24 @@
-package kr.co.mz.tutorial.jsp.dao;
+package kr.co.mz.tutorial.dao;
 
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.sql.DataSource;
-import kr.co.mz.tutorial.jsp.db.QueryManager;
-import kr.co.mz.tutorial.jsp.dto.DepartmentDto;
-import kr.co.mz.tutorial.jsp.dto.EmployeeDto;
-import kr.co.mz.tutorial.jsp.dto.ProjectDto;
+import kr.co.mz.tutorial.dto.DepartmentDto;
+import kr.co.mz.tutorial.dto.EmployeeDto;
+import kr.co.mz.tutorial.dto.ProjectDto;
 
-public class DepartmentDao {
+public class DepartmentDao extends AbstractDao {
 
-  public DataSource dataSource;
-
-  public DepartmentDao(DataSource dataSource) {
-    this.dataSource = dataSource;
+  public DepartmentDao() {
   }
-
 
   public List<DepartmentDto> findAll() throws SQLException {
     try (
-        var conn = dataSource.getConnection();
+        var conn = getConnection();
         var pst = conn.prepareStatement(
-            QueryManager.getQuery("SELECT_ALL_DEPARTMENT"));
+            queryManager.getQuery("SELECT_ALL_DEPARTMENT"));
     ) {
       var rs = pst.executeQuery();
       var dtoList = new ArrayList<DepartmentDto>();
@@ -80,8 +75,8 @@ public class DepartmentDao {
 
   public Optional<DepartmentDto> findOneByDepartmentName(String departmentName) throws SQLException {
     try (
-        var conn = dataSource.getConnection();
-        var pst = conn.prepareStatement(QueryManager.getQuery(
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery(
             "SELECT_ONE_DEPARTMENT_WITH_PROJECTS_AND_EMPLOYEES_BY_NAME"))
     ) {
       pst.setString(1, departmentName);
@@ -119,12 +114,16 @@ public class DepartmentDao {
 
   public void insertOne(DepartmentDto dto) {
     try (
-        var conn = dataSource.getConnection();
-        var pst = conn.prepareStatement(QueryManager.getQuery("INSERT_DEPARTMENT"))
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("INSERT_DEPARTMENT"))
     ) {
       System.out.println(dto.getDepartmentName());
       pst.setString(1, dto.getDepartmentName());
-      pst.setString(2, dto.getLocation());
+      if (dto.getLocation() != null) {
+        pst.setString(2, dto.getLocation());
+      } else {
+        pst.setNull(2, Types.VARCHAR);
+      }
       pst.setString(3, dto.getCreatedBy());
       var rs = pst.executeUpdate();
       System.out.println("Insert into department is complete for " + rs + " rows.");
@@ -132,6 +131,7 @@ public class DepartmentDao {
       System.out.println("Failed to insert: " + sqle.getMessage());
       sqle.printStackTrace();
     }
-
   }
+
+
 }

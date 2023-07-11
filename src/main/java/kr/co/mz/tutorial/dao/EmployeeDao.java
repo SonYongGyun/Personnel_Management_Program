@@ -1,23 +1,21 @@
-package kr.co.mz.tutorial.jsp.dao;
+package kr.co.mz.tutorial.dao;
 
 import java.sql.SQLException;
 import java.sql.Types;
-import javax.sql.DataSource;
-import kr.co.mz.tutorial.jsp.db.QueryManager;
-import kr.co.mz.tutorial.jsp.dto.EmployeeDto;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import kr.co.mz.tutorial.dto.EmployeeDto;
 
-public class EmployeeDao {
+public class EmployeeDao extends AbstractDao {
 
-  public DataSource dataSource;
-
-  public EmployeeDao(DataSource dataSource) {
-    this.dataSource = dataSource;
+  public EmployeeDao() {
   }
 
   public void insertOne(EmployeeDto employeeDto) {
     try (
-        var conn = dataSource.getConnection();
-        var pst = conn.prepareStatement(QueryManager.getQuery("INSERT_EMPLOYEE"))
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("INSERT_EMPLOYEE"))
     ) {
       pst.setString(1, employeeDto.getEmployeeName());
       pst.setString(2, employeeDto.getPositionIs());
@@ -49,8 +47,8 @@ public class EmployeeDao {
 
   public void deleteOneBySeq(long seq) {
     try (
-        var conn = dataSource.getConnection();
-        var pst = conn.prepareStatement(QueryManager.getQuery("DELETE_ONE_EMPLOYEE"))
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("DELETE_ONE_EMPLOYEE"))
     ) {
       pst.setLong(1, seq);
       var rs = pst.executeUpdate();
@@ -62,4 +60,40 @@ public class EmployeeDao {
     }
   }
 
+  public Optional<EmployeeDto> findBySeq() {
+
+    return Optional.empty();
+  }
+
+  public List<EmployeeDto> findAll() {
+    try (
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("SELECT_ALL_EMPLOYEE"))
+    ) {
+      var list = new ArrayList<EmployeeDto>();
+
+      return list;
+    } catch (SQLException sqle) {
+      sqle.printStackTrace();
+      return new ArrayList<EmployeeDto>();
+    }
+
+  }
+
+  public void managedBy(long employeeSeq, long managerSeq) {
+    try (
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("UPDATE_EMPLOYEE_MANAGER_SEQ"))
+    ) {
+      pst.setLong(1, managerSeq);
+      pst.setLong(2, employeeSeq);
+      var rs = pst.executeUpdate();
+
+      System.out.println("Update employee is complete for " + rs + " rows.");
+
+    } catch (SQLException sqle) {
+      System.out.println("Failed to update: " + sqle.getMessage());
+      sqle.printStackTrace();
+    }
+  }
 }

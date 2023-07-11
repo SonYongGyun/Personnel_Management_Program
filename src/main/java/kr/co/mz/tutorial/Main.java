@@ -1,7 +1,7 @@
-package kr.co.mz.tutorial.jsp;
+package kr.co.mz.tutorial;
 
 import java.sql.SQLException;
-import kr.co.mz.tutorial.jsp.db.HikariPoolFactory;
+import kr.co.mz.tutorial.db.HikariPoolFactory;
 
 public class Main {
 

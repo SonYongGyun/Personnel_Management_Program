@@ -1,5 +1,6 @@
-package kr.co.mz.tutorial.jsp.dto;
+package kr.co.mz.tutorial.dto;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -7,8 +8,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DepartmentDto extends AbstractDto {
+public class DepartmentDto extends AbstractDto implements Serializable {
 
+  public static final long serialVersionUID = 354987346798L;
   private long seq;
   private String departmentName;
   private String location;
@@ -149,8 +151,10 @@ public class DepartmentDto extends AbstractDto {
         ", createdTime=" + createdTime +
         ", modifiedBy='" + modifiedBy + '\'' +
         ", modifiedTime=" + modifiedTime +
-        ",\nemployeesSet= \n" + employeesSet.stream().map(EmployeeDto::toString).collect(Collectors.joining("\n ")) +
-        "\nprojectsSet=\n " + projectsSet.stream().map(ProjectDto::toString).collect(Collectors.joining("\n ")) +
+        ",\nemployeesSet= \n" + employeesSet.stream().map(EmployeeDto::toString)
+        .collect(Collectors.joining("\n ")) +
+        "\nprojectsSet=\n " + projectsSet.stream().map(ProjectDto::toString)
+        .collect(Collectors.joining("\n ")) +
         "\n}\n\n";
   }
 }

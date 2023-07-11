@@ -6,13 +6,24 @@
   version="3.1">
 
   <servlet>
-    <servlet-name>TutorialServletContainer</servlet-name>
-    <servlet-class>kr.co.mz.tutorial.jsp.TutorialServletContainer</servlet-class>
+    <servlet-name>DepartmentListServlet</servlet-name>
+    <servlet-class>kr.co.mz.tutorial.servlet.DepartmentListServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>TutorialServletContainer</servlet-name>
-    <url-pattern>/hello</url-pattern>
+    <servlet-name>DepartmentListServlet</servlet-name>
+    <url-pattern>/departmentList</url-pattern>
   </servlet-mapping>
+
+
+  <servlet>
+    <servlet-name>HomeServlet</servlet-name>
+    <servlet-class>kr.co.mz.tutorial.servlet.HomeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HomeServlet</servlet-name>
+    <url-pattern>/home</url-pattern>
+  </servlet-mapping>
+
   <jsp-config>
     <jsp-property-group>
       <url-pattern>*.jsp</url-pattern>
@@ -20,6 +31,10 @@
     </jsp-property-group>
   </jsp-config>
   <listener>
-    <listener-class>kr.co.mz.tutorial.jsp.db.HikariCPListener</listener-class>
+    <listener-class>kr.co.mz.tutorial.listener.HikariCPListener</listener-class>
   </listener>
+  <listener>
+    <listener-class>kr.co.mz.tutorial.listener.QueryManagerListener</listener-class>
+  </listener>
+
 </web-app>

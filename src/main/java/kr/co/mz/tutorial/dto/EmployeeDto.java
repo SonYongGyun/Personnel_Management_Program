@@ -1,4 +1,4 @@
-package kr.co.mz.tutorial.jsp.dto;
+package kr.co.mz.tutorial.dto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -158,6 +158,31 @@ public class EmployeeDto extends AbstractDto {
     try {
       var employeeDto = new EmployeeDto();
       employeeDto.setSeq(rs.getLong("E.seq"));
+      employeeDto.setEmployeeName(rs.getString("E.employee_name"));
+      employeeDto.setPositionIs(rs.getString("E.position_is"));
+      employeeDto.setPhoneNumber(rs.getString("E.phone_number"));
+      employeeDto.setHireDate(rs.getTimestamp("E.hire_date"));
+      employeeDto.setDepartmentSeq(rs.getLong("E.department_seq"));
+      employeeDto.setManagerSeq(rs.getLong("E.manager_seq"));
+      employeeDto.setVendorSeq(rs.getLong("E.vendor_seq"));
+
+      employeeDto.setCreatedBy(rs.getString("E.created_by"));
+      employeeDto.setCreatedTime(rs.getTimestamp("E.created_time"));
+      employeeDto.setModifiedBy(rs.getString("E.modified_by"));
+      employeeDto.setModifiedTime(rs.getTimestamp("E.modified_time"));
+
+      return employeeDto;
+    } catch (SQLException sqle) {
+      System.out.println("Failed to build employeeDto from resultSet: " + sqle.getMessage());
+      sqle.printStackTrace();
+      return new EmployeeDto();
+    }
+  }
+
+  public EmployeeDto managerFromResultSet(ResultSet rs) { //todo 얜 구지?
+    try {
+      var employeeDto = new EmployeeDto();
+      employeeDto.setSeq(rs.getLong("M.seq"));
       employeeDto.setEmployeeName(rs.getString("E.employee_name"));
       employeeDto.setPositionIs(rs.getString("E.position_is"));
       employeeDto.setPhoneNumber(rs.getString("E.phone_number"));

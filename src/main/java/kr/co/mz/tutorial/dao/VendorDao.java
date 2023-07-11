@@ -1,22 +1,17 @@
-package kr.co.mz.tutorial.jsp.dao;
+package kr.co.mz.tutorial.dao;
 
 import java.sql.SQLException;
-import javax.sql.DataSource;
-import kr.co.mz.tutorial.jsp.db.QueryManager;
-import kr.co.mz.tutorial.jsp.dto.VendorDto;
+import kr.co.mz.tutorial.dto.VendorDto;
 
-public class VendorDao {
+public class VendorDao extends AbstractDao {
 
-  public DataSource dataSource;
-
-  public VendorDao(DataSource dataSource) {
-    this.dataSource = dataSource;
+  public VendorDao() {
   }
 
   public void insertOne(VendorDto vendorDto) {
     try (
-        var conn = dataSource.getConnection();
-        var pst = conn.prepareStatement(QueryManager.getQuery("INSERT_VENDOR"))
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("INSERT_VENDOR"))
     ) {
       pst.setString(1, vendorDto.getVendorName());
       pst.setString(2, vendorDto.getContact());

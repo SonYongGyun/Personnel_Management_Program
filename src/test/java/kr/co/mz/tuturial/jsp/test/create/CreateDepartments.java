@@ -2,8 +2,8 @@ package kr.co.mz.tuturial.jsp.test.create;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import kr.co.mz.tutorial.jsp.dao.DepartmentDao;
-import kr.co.mz.tutorial.jsp.db.HikariPoolFactory;
+import kr.co.mz.tutorial.dao.DepartmentDao;
+import kr.co.mz.tutorial.db.HikariPoolFactory;
 
 public class CreateDepartments {
 
@@ -12,7 +12,7 @@ public class CreateDepartments {
     var ds = new HikariPoolFactory().createHikariDataSource();
 
     var depDtoC = new CreateDepartmentDto();
-    var departmentDao = new DepartmentDao(ds);
+    var departmentDao = new DepartmentDao();
     departmentDao.insertOne(depDtoC.nameB2B());
     departmentDao.insertOne(depDtoC.nameTaskForce1());
     departmentDao.insertOne(depDtoC.nameTaskForce2());

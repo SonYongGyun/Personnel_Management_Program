@@ -1,22 +1,17 @@
-package kr.co.mz.tutorial.jsp.dao;
+package kr.co.mz.tutorial.dao;
 
 import java.sql.SQLException;
-import javax.sql.DataSource;
-import kr.co.mz.tutorial.jsp.db.QueryManager;
-import kr.co.mz.tutorial.jsp.dto.ProjectDto;
+import kr.co.mz.tutorial.dto.ProjectDto;
 
-public class ProjectDao {
+public class ProjectDao extends AbstractDao {
 
-  public DataSource dataSource;
-
-  public ProjectDao(DataSource dataSource) {
-    this.dataSource = dataSource;
+  public ProjectDao() {
   }
 
   public void insertOne(ProjectDto projectDto) {
     try (
-        var conn = dataSource.getConnection();
-        var pst = conn.prepareStatement(QueryManager.getQuery("INSERT_PROJECT"))
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("INSERT_PROJECT"))
     ) {
       pst.setString(1, projectDto.getProjectName());
       pst.setString(2, projectDto.getProjectDescription());
@@ -33,8 +28,8 @@ public class ProjectDao {
 
   public void deleteOneBySeq(long seq) {
     try (
-        var conn = dataSource.getConnection();
-        var pst = conn.prepareStatement(QueryManager.getQuery("DELETE_ONE_PROJECT"))
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("DELETE_ONE_PROJECT"))
     ) {
       pst.setLong(1, seq);
       var rs = pst.executeUpdate();
@@ -47,8 +42,8 @@ public class ProjectDao {
 
   public void assignToDepartment(long departmentSeq, long projectSeq) {
     try (
-        var conn = dataSource.getConnection();
-        var pst = conn.prepareStatement(QueryManager.getQuery("INSERT_DP_RELATIONSHIP"))
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("INSERT_DP_RELATIONSHIP"))
     ) {
       pst.setLong(1, departmentSeq);
       pst.setLong(2, projectSeq);
@@ -62,8 +57,8 @@ public class ProjectDao {
 
   public void assignToEmployee(long employeeSeq, long projectSeq) {
     try (
-        var conn = dataSource.getConnection();
-        var pst = conn.prepareStatement(QueryManager.getQuery("INSERT_EP_RELATIONSHIP"))
+        var conn = getConnection();
+        var pst = conn.prepareStatement(queryManager.getQuery("INSERT_EP_RELATIONSHIP"))
     ) {
       pst.setLong(1, employeeSeq);
       pst.setLong(2, projectSeq);

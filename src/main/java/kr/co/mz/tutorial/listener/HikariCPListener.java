@@ -1,4 +1,4 @@
-package kr.co.mz.tutorial.jsp.db;
+package kr.co.mz.tutorial.listener;
 
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 import com.zaxxer.hikari.HikariConfig;
