@@ -2,12 +2,14 @@ package kr.co.mz.tutorial.db;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Properties;
 
-public class QueryManager {
+public class QueryManager implements Serializable {
 
-  private final String QUERY_FILE = "db/queries.properties";
-  private Properties properties;
+  public static final long serialVersionUID = 235982534L;
+  private static final String QUERY_FILE = "db/queries.properties";
+  private final Properties properties;
 
   {//객체를 초기화 하는 방법.
     properties = new Properties();

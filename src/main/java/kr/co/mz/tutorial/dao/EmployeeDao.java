@@ -1,43 +1,58 @@
 package kr.co.mz.tutorial.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import kr.co.mz.tutorial.db.QueryManager;
 import kr.co.mz.tutorial.dto.EmployeeDto;
 
 public class EmployeeDao extends AbstractDao {
 
-  public EmployeeDao() {
+  private Connection conn;
+  private final QueryManager queryManager;
+
+  public EmployeeDao(Connection conn, QueryManager queryManager) {
+    this.conn = conn;
+    this.queryManager = queryManager;
   }
 
   public void insertOne(EmployeeDto employeeDto) {
     try (
-        var conn = getConnection();
-        var pst = conn.prepareStatement(queryManager.getQuery("INSERT_EMPLOYEE"))
+        var insertEmployeePst = conn.prepareStatement(queryManager.getQuery("INSERT_EMPLOYEE"));
+        var updateEmployeesPst = conn.prepareStatement(queryManager.getQuery("UPDATE_DEPARTMENT_TOTAL_EMPLOYEES"))
     ) {
-      pst.setString(1, employeeDto.getEmployeeName());
-      pst.setString(2, employeeDto.getPositionIs());
-      pst.setString(3, employeeDto.getPhoneNumber());
-      pst.setTimestamp(4, employeeDto.getHireDate());
+      conn.setAutoCommit(false);
+      insertEmployeePst.setString(1, employeeDto.getEmployeeName());
+      insertEmployeePst.setString(2, employeeDto.getPositionIs());
+      insertEmployeePst.setString(3, employeeDto.getPhoneNumber());
+      insertEmployeePst.setTimestamp(4, employeeDto.getHireDate());
       if (employeeDto.getDepartmentSeq() != 0) {
-        pst.setLong(5, employeeDto.getDepartmentSeq());
+        insertEmployeePst.setLong(5, employeeDto.getDepartmentSeq());
       } else {
-        pst.setNull(5, Types.INTEGER);
+        insertEmployeePst.setNull(5, Types.INTEGER);
       }
       if (employeeDto.getManagerSeq() != 0) {
-        pst.setLong(6, employeeDto.getManagerSeq());
+        insertEmployeePst.setLong(6, employeeDto.getManagerSeq());
       } else {
-        pst.setNull(6, Types.INTEGER);
+        insertEmployeePst.setNull(6, Types.INTEGER);
       }
       if (employeeDto.getVendorSeq() != 0) {
-        pst.setLong(7, employeeDto.getVendorSeq());
+        insertEmployeePst.setLong(7, employeeDto.getVendorSeq());
       } else {
-        pst.setNull(7, Types.INTEGER);
+        insertEmployeePst.setNull(7, Types.INTEGER);
       }
-      pst.setString(8, employeeDto.getCreatedBy());
-      var rs = pst.executeUpdate();
+      insertEmployeePst.setString(8, employeeDto.getCreatedBy());
+      if (employeeDto.getDepartmentSeq() != 0) {
+        updateEmployeesPst.setLong(1, employeeDto.getDepartmentSeq());
+        updateEmployeesPst.setLong(2, employeeDto.getDepartmentSeq());
+      }
+      var rs = insertEmployeePst.executeUpdate();
+
+      conn.commit();
+
       System.out.println("Insert into employee is complete for " + rs + " rows.");
     } catch (SQLException sqle) {
       System.out.println("Failed to insert: " + sqle.getMessage());
@@ -47,7 +62,6 @@ public class EmployeeDao extends AbstractDao {
 
   public void deleteOneBySeq(long seq) {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(queryManager.getQuery("DELETE_ONE_EMPLOYEE"))
     ) {
       pst.setLong(1, seq);
@@ -67,7 +81,6 @@ public class EmployeeDao extends AbstractDao {
 
   public List<EmployeeDto> findAll() {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(queryManager.getQuery("SELECT_ALL_EMPLOYEE"))
     ) {
       var list = new ArrayList<EmployeeDto>();
@@ -82,7 +95,6 @@ public class EmployeeDao extends AbstractDao {
 
   public void managedBy(long employeeSeq, long managerSeq) {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(queryManager.getQuery("UPDATE_EMPLOYEE_MANAGER_SEQ"))
     ) {
       pst.setLong(1, managerSeq);

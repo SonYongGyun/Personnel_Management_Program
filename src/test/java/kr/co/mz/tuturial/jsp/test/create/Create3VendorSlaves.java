@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import kr.co.mz.tutorial.dao.EmployeeDao;
 import kr.co.mz.tutorial.db.HikariPoolFactory;
+import kr.co.mz.tutorial.db.QueryManager;
 import kr.co.mz.tutorial.dto.EmployeeDto;
 
 public class Create3VendorSlaves {
@@ -12,7 +13,9 @@ public class Create3VendorSlaves {
   public static void main(String[] args) throws IOException, SQLException {
     // 부서 3개, 프로젝트 3개, 직원 5명, 협력사 2개.
     var ds = new HikariPoolFactory().createHikariDataSource();
-    var empDao = new EmployeeDao();
+    var queryManager = new QueryManager();
+
+    var empDao = new EmployeeDao(ds.getConnection(), queryManager);
     var empDtoC = new CreateEmployeeDto();
 //
     for (int i = 1; i < 4; i++) {

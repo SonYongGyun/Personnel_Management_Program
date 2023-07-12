@@ -1,5 +1,7 @@
 package kr.co.mz.tutorial.listener;
 
+import static kr.co.mz.tutorial.Constants.DATASOURCE_CONTEXT_KEY;
+
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -39,7 +41,7 @@ public class HikariCPListener implements ServletContextListener {
     var config = new HikariConfig(props);
     dataSource = new HikariDataSource(config);
 
-    sce.getServletContext().setAttribute("dataSource", dataSource);//설정추가.
+    sce.getServletContext().setAttribute(DATASOURCE_CONTEXT_KEY, dataSource);//설정추가.
   }
 
 

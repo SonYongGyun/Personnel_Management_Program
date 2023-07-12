@@ -1,22 +1,29 @@
 package kr.co.mz.tutorial.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import kr.co.mz.tutorial.db.QueryManager;
 import kr.co.mz.tutorial.dto.DepartmentDto;
 import kr.co.mz.tutorial.dto.EmployeeDto;
 import kr.co.mz.tutorial.dto.ProjectDto;
 
 public class DepartmentDao extends AbstractDao {
 
-  public DepartmentDao() {
+  private final Connection conn;
+
+  private final QueryManager queryManager;
+
+  public DepartmentDao(Connection conn, QueryManager queryManager) {
+    this.conn = conn;
+    this.queryManager = queryManager;
   }
 
   public List<DepartmentDto> findAll() throws SQLException {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(
             queryManager.getQuery("SELECT_ALL_DEPARTMENT"));
     ) {
@@ -64,18 +71,42 @@ public class DepartmentDao extends AbstractDao {
   }
 
   public Optional<DepartmentDto> findOneBySeq(long seq) throws SQLException {
-//    try (
-//        var conn = dataSource.getConnection();
-//        var pst = conn.prepareStatement(QueryManager.getQuery())
-//    ) {
-//    } catch (SQLException sqle) {
-//    }
-    return Optional.empty();
+    try (
+        var pst = conn.prepareStatement(
+            queryManager.getQuery("SELECT_ONE_DEPARTMENT_WITH_PROJECTS_AND_EMPLOYEES_BY_SEQ"))
+    ) {
+      pst.setLong(1, seq);
+      var rs = pst.executeQuery();
+      DepartmentDto dto = null;
+      ProjectDto projectDto;
+      EmployeeDto employeeDto;
+      while (rs.next()) {
+        var currentDto = new DepartmentDto().fromResultSet(rs);
+        if (dto == null || dto.getSeq() == currentDto.getSeq()) {
+          dto = currentDto;
+        }
+        var employeeSeq = rs.getLong("E.seq");
+        var existOptionalEmployee = dto.getEmployeesSet().stream().filter(emp -> emp.getSeq() == employeeSeq)
+            .findFirst();
+        if (existOptionalEmployee.isEmpty()) {
+          employeeDto = new EmployeeDto().fromResultSet(rs);
+          dto.addEmployee(employeeDto);
+        }
+
+        var projectSeq = rs.getLong("P.seq");
+        var existOptionalProject = dto.getProjectsSet().stream().filter(pro -> pro.getSeq() == projectSeq)
+            .findFirst();
+        if (existOptionalProject.isEmpty()) {
+          projectDto = new ProjectDto().fromResultSet(rs);
+          dto.addProject(projectDto);
+        }
+      }
+      return Optional.ofNullable(dto);
+    }
   }
 
   public Optional<DepartmentDto> findOneByDepartmentName(String departmentName) throws SQLException {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(queryManager.getQuery(
             "SELECT_ONE_DEPARTMENT_WITH_PROJECTS_AND_EMPLOYEES_BY_NAME"))
     ) {
@@ -114,7 +145,6 @@ public class DepartmentDao extends AbstractDao {
 
   public void insertOne(DepartmentDto dto) {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(queryManager.getQuery("INSERT_DEPARTMENT"))
     ) {
       System.out.println(dto.getDepartmentName());

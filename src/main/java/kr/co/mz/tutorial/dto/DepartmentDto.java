@@ -157,4 +157,18 @@ public class DepartmentDto extends AbstractDto implements Serializable {
         .collect(Collectors.joining("\n ")) +
         "\n}\n\n";
   }
+
+  public String toHalfString() {
+    return "DepartmentDto{" +
+        "seq=" + seq +
+        ", departmentName='" + departmentName + '\'' +
+        ", location='" + location + '\'' +
+        ", totalEmployees=" + totalEmployees +
+        ", totalProjects=" + totalProjects +
+        ", createdBy='" + createdBy + '\'' +
+        ", createdTime=" + createdTime +
+        ", modifiedBy='" + modifiedBy + '\'' +
+        ", modifiedTime=" + modifiedTime +
+        "}\n\n";
+  }
 }

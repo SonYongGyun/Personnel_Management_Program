@@ -1,16 +1,22 @@
 package kr.co.mz.tutorial.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import kr.co.mz.tutorial.db.QueryManager;
 import kr.co.mz.tutorial.dto.ProjectDto;
 
 public class ProjectDao extends AbstractDao {
 
-  public ProjectDao() {
+  private Connection conn;
+  private final QueryManager queryManager;
+
+  public ProjectDao(Connection conn, QueryManager queryManager) {
+    this.conn = conn;
+    this.queryManager = queryManager;
   }
 
   public void insertOne(ProjectDto projectDto) {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(queryManager.getQuery("INSERT_PROJECT"))
     ) {
       pst.setString(1, projectDto.getProjectName());
@@ -28,7 +34,6 @@ public class ProjectDao extends AbstractDao {
 
   public void deleteOneBySeq(long seq) {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(queryManager.getQuery("DELETE_ONE_PROJECT"))
     ) {
       pst.setLong(1, seq);
@@ -42,7 +47,6 @@ public class ProjectDao extends AbstractDao {
 
   public void assignToDepartment(long departmentSeq, long projectSeq) {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(queryManager.getQuery("INSERT_DP_RELATIONSHIP"))
     ) {
       pst.setLong(1, departmentSeq);
@@ -57,7 +61,6 @@ public class ProjectDao extends AbstractDao {
 
   public void assignToEmployee(long employeeSeq, long projectSeq) {
     try (
-        var conn = getConnection();
         var pst = conn.prepareStatement(queryManager.getQuery("INSERT_EP_RELATIONSHIP"))
     ) {
       pst.setLong(1, employeeSeq);
