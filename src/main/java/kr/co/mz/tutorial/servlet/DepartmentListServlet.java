@@ -18,13 +18,14 @@ public class DepartmentListServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
+    response.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
     List<DepartmentDto> list;
     var dao = new DepartmentDao();
     dao.setDataSource((DataSource) getServletContext().getAttribute("dataSource"));
     dao.setQueryManager((QueryManager) getServletContext().getAttribute("queryManager"));
     try {
       list = dao.findAll();
-      response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
       out.println("<html><body>");
       for (DepartmentDto d : list) {
