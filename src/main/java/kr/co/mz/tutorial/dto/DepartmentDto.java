@@ -22,6 +22,7 @@ public class DepartmentDto extends AbstractDto implements Serializable {
 
 
   public DepartmentDto() {
+    super();
   }
 
   public DepartmentDto(String departmentId, String location, String createdBy) {
@@ -29,6 +30,17 @@ public class DepartmentDto extends AbstractDto implements Serializable {
     this.location = location;
     this.createdBy = createdBy;
   }
+
+  public DepartmentDto(long seq, String departmentName, String location, long totalEmployees, long totalProjects,
+      String createdBy, Timestamp createTime, String modifiedBy, Timestamp modifiedTime) {
+    super(createdBy, createTime, modifiedBy, modifiedTime);
+    this.seq = seq;
+    this.departmentName = departmentName;
+    this.location = location;
+    this.totalEmployees = totalEmployees;
+    this.totalProjects = totalProjects;
+  }
+
 
   public long getSeq() {
     return seq;
@@ -118,23 +130,22 @@ public class DepartmentDto extends AbstractDto implements Serializable {
     projectsSet.add(projectDto);
   }
 
-  public DepartmentDto fromResultSet(ResultSet rs) {
+  public static DepartmentDto fromResultSet(ResultSet rs) {
     try {
-      var departmentDto = new DepartmentDto();
-      departmentDto.setSeq(rs.getLong("D.seq"));
-      departmentDto.setDepartmentName(rs.getString("D.department_name"));
-      departmentDto.setLocation(rs.getString("D.location"));
-      departmentDto.setTotalEmployees(rs.getInt("D.total_employees"));
-      departmentDto.setTotalProjects(rs.getInt("D.total_projects"));
-
-      departmentDto.setCreatedBy(rs.getString("D.created_by"));
-      departmentDto.setCreatedTime(rs.getTimestamp("D.created_time"));
-      departmentDto.setModifiedBy(rs.getString("D.modified_by"));
-      departmentDto.setModifiedTime(rs.getTimestamp("D.modified_time"));
-
-      return departmentDto;
+      return new DepartmentDto(
+          rs.getLong("D.seq"),
+          rs.getString("D.department_name"),
+          rs.getString("D.location"),
+          rs.getInt("D.total_employees"),
+          rs.getInt("D.total_projects"),
+          rs.getString("D.created_by"),
+          rs.getTimestamp("D.created_time"),
+          rs.getString("D.modified_by"),
+          rs.getTimestamp("D.modified_time")
+      );
     } catch (SQLException sqle) {
       System.out.println("Failed to build departmentDto from resultSet: " + sqle.getMessage());
+      System.err.println("Instead of fromResultSet, return new Dto");
       return new DepartmentDto();
     }
   }
@@ -158,7 +169,7 @@ public class DepartmentDto extends AbstractDto implements Serializable {
         "\n}\n\n";
   }
 
-  public String toHalfString() {
+  public String toStringWithOutSet() {
     return "DepartmentDto{" +
         "seq=" + seq +
         ", departmentName='" + departmentName + '\'' +

@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--xml파일의 메타정보를 나타냄.-->
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
   version="3.1">
 
-  <servlet>
-    <servlet-name>DepartmentListServlet</servlet-name>
-    <servlet-class>kr.co.mz.tutorial.servlet.DepartmentListServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>DepartmentListServlet</servlet-name>
-    <url-pattern>/departmentList</url-pattern>
-  </servlet-mapping>
+  <listener>
+    <listener-class>kr.co.mz.tutorial.listener.HikariCPListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>kr.co.mz.tutorial.listener.QueryManagerListener</listener-class>
+  </listener>
+
+  <filter>
+    <filter-name>EncodingFilter</filter-name>
+    <filter-class>kr.co.mz.tutorial.servlet.filter.EncodingFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>EncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>QueryStringFilter</filter-name>
+    <filter-class>kr.co.mz.tutorial.servlet.filter.QueryStringFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>QueryStringFilter</filter-name>
+    <url-pattern>/find-one/*</url-pattern>
+  </filter-mapping>
 
 
   <servlet>
@@ -22,40 +38,44 @@
   <servlet-mapping>
     <servlet-name>HomeServlet</servlet-name>
     <url-pattern>/home</url-pattern>
+    <!--    홈페이지 패턴 / 로하면 404 안뜨고 /로 돌아간다;-->
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>DepartmentListServlet</servlet-name>
+    <servlet-class>kr.co.mz.tutorial.servlet.DepartmentListServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DepartmentListServlet</servlet-name>
+    <url-pattern>/list/department</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>FindOneDepartment</servlet-name>
-    <servlet-class>kr.co.mz.tutorial.servlet.FindOneDepartment</servlet-class>
+    <servlet-class>kr.co.mz.tutorial.servlet.FindOneDepartmentServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>FindOneDepartment</servlet-name>
-    <url-pattern>/findOneDepartment</url-pattern>
+    <url-pattern>/find-one/department</url-pattern>
   </servlet-mapping>
 
-  <filter>
-    <filter-name>EncodingFilter</filter-name>
-    <filter-class>kr.co.mz.tutorial.servlet.filter.EncodingFilter</filter-class>
-  </filter>
-  <filter>
-    <filter-name>DepartmentQueryStringFilter</filter-name>
-    <filter-class>kr.co.mz.tutorial.servlet.filter.DepartmentQueryStringFilter</filter-class>
-  </filter>
+  <error-page>
+    <exception-type>kr.co.mz.tutorial.exception.AlertException</exception-type>
+    <location>/WEB-INF/jsp/alert.jsp</location>
+  </error-page>
 
-  <filter-mapping>
-    <filter-name>EncodingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>DepartmentQueryStringFilter</filter-name>
-    <url-pattern>/findOneDepartment</url-pattern>
-  </filter-mapping>
+  <error-page>
+    <exception-type>kr.co.mz.tutorial.exception.WrongAccessException</exception-type>
+    <location>/WEB-INF/jsp/redirect.jsp</location>
+  </error-page>
 
+  <error-page>
+    <exception-type>kr.co.mz.tutorial.exception.DataBaseException</exception-type>
+    <location>/WEB-INF/jsp/error.jsp</location>
+  </error-page>
 
-  <listener>
-    <listener-class>kr.co.mz.tutorial.listener.HikariCPListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>kr.co.mz.tutorial.listener.QueryManagerListener</listener-class>
-  </listener>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/WEB-INF/jsp/error.jsp</location>
+  </error-page>
+
 
 </web-app>

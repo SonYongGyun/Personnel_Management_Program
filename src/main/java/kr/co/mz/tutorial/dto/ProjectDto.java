@@ -22,14 +22,33 @@ public class ProjectDto extends AbstractDto {
   public ProjectDto() {
   }
 
-  public ProjectDto(String projectName, String projectDescription, String projectStatus, BigDecimal budget,
-      Timestamp startDate, String createdBy) {
+  public ProjectDto(long seq, String projectName, String projectDescription, String projectStatus, BigDecimal budget,
+      Timestamp startDate, Timestamp endDate, Set<DepartmentDto> joinedDepartmentsSet,
+      Set<EmployeeDto> joinedEmployeesSet) {
+    this.seq = seq;
     this.projectName = projectName;
     this.projectDescription = projectDescription;
     this.projectStatus = projectStatus;
     this.budget = budget;
     this.startDate = startDate;
-    this.createdBy = createdBy;
+    this.endDate = endDate;
+    this.joinedDepartmentsSet = joinedDepartmentsSet;
+    this.joinedEmployeesSet = joinedEmployeesSet;
+  }
+
+  public ProjectDto(long seq,
+      String projectName, String projectDescription, String projectStatus, BigDecimal budget, Timestamp startDate,
+      Timestamp endDate,
+      String createdBy, Timestamp createdTime, String modifiedBy, Timestamp modifiedTime
+  ) {
+    super(createdBy, createdTime, modifiedBy, modifiedTime);
+    this.seq = seq;
+    this.projectName = projectName;
+    this.projectDescription = projectDescription;
+    this.projectStatus = projectStatus;
+    this.budget = budget;
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 
   public long getSeq() {
@@ -145,7 +164,7 @@ public class ProjectDto extends AbstractDto {
   }
 
 
-  public ProjectDto fromResultSet(ResultSet rs) {
+  public static ProjectDto fromResultSet(ResultSet rs) {
     try {
       var projectDto = new ProjectDto();
       projectDto.setSeq(rs.getLong("P.seq"));

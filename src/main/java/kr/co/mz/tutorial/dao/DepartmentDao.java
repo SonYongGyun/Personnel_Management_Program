@@ -10,11 +10,13 @@ import kr.co.mz.tutorial.db.QueryManager;
 import kr.co.mz.tutorial.dto.DepartmentDto;
 import kr.co.mz.tutorial.dto.EmployeeDto;
 import kr.co.mz.tutorial.dto.ProjectDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class DepartmentDao extends AbstractDao {
+public class DepartmentDao {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentDao.class);
   private final Connection conn;
-
   private final QueryManager queryManager;
 
   public DepartmentDao(Connection conn, QueryManager queryManager) {
@@ -23,14 +25,17 @@ public class DepartmentDao extends AbstractDao {
   }
 
   public List<DepartmentDto> findAll() throws SQLException {
+    var acquiredQuery = queryManager.getQuery("SELECT_ALL_DEPARTMENT");
+    if (!acquiredQuery.isEmpty()) {
+      LOGGER.debug("Query is\n{}", acquiredQuery);
+    }
     try (
-        var pst = conn.prepareStatement(
-            queryManager.getQuery("SELECT_ALL_DEPARTMENT"));
+        var pst = conn.prepareStatement(acquiredQuery);
     ) {
       var rs = pst.executeQuery();
       var dtoList = new ArrayList<DepartmentDto>();
       while (rs.next()) {
-        var departmentDto = new DepartmentDto().fromResultSet(rs);
+        var departmentDto = DepartmentDto.fromResultSet(rs);
 
         var existOptionalDepartment = dtoList.stream()
             .filter(dep -> dep.getSeq() == departmentDto.getSeq())
@@ -46,7 +51,7 @@ public class DepartmentDao extends AbstractDao {
         }
 
         if (rs.getLong("P.seq") != 0) {
-          var projectDto = new ProjectDto().fromResultSet(rs);
+          var projectDto = ProjectDto.fromResultSet(rs);
           var existOptionalProjectDto = projectsSet.stream()
               .filter(pro -> pro.getSeq() == projectDto.getSeq())
               .findFirst();
@@ -56,7 +61,7 @@ public class DepartmentDao extends AbstractDao {
         }
         //21번째에 E.seq
         if (rs.getLong("E.seq") != 0) {
-          var employeeDto = new EmployeeDto().fromResultSet(rs);
+          var employeeDto = EmployeeDto.fromResultSet(rs);
           var existOptionalEmployee = employeesSet.stream()
               .filter(emp -> emp.getSeq() == employeeDto.getSeq())
               .findFirst();
@@ -71,9 +76,12 @@ public class DepartmentDao extends AbstractDao {
   }
 
   public Optional<DepartmentDto> findOneBySeq(long seq) throws SQLException {
+    var acquiredQuery = queryManager.getQuery("SELECT_ONE_DEPARTMENT_WITH_PROJECTS_AND_EMPLOYEES_BY_SEQ");
+    if (!acquiredQuery.isEmpty()) {
+      LOGGER.debug("Query is:\n{}", acquiredQuery);
+    }
     try (
-        var pst = conn.prepareStatement(
-            queryManager.getQuery("SELECT_ONE_DEPARTMENT_WITH_PROJECTS_AND_EMPLOYEES_BY_SEQ"))
+        var pst = conn.prepareStatement(acquiredQuery)
     ) {
       pst.setLong(1, seq);
       var rs = pst.executeQuery();
@@ -81,7 +89,7 @@ public class DepartmentDao extends AbstractDao {
       ProjectDto projectDto;
       EmployeeDto employeeDto;
       while (rs.next()) {
-        var currentDto = new DepartmentDto().fromResultSet(rs);
+        var currentDto = DepartmentDto.fromResultSet(rs);
         if (dto == null || dto.getSeq() == currentDto.getSeq()) {
           dto = currentDto;
         }
@@ -89,7 +97,7 @@ public class DepartmentDao extends AbstractDao {
         var existOptionalEmployee = dto.getEmployeesSet().stream().filter(emp -> emp.getSeq() == employeeSeq)
             .findFirst();
         if (existOptionalEmployee.isEmpty()) {
-          employeeDto = new EmployeeDto().fromResultSet(rs);
+          employeeDto = EmployeeDto.fromResultSet(rs);
           dto.addEmployee(employeeDto);
         }
 
@@ -97,7 +105,7 @@ public class DepartmentDao extends AbstractDao {
         var existOptionalProject = dto.getProjectsSet().stream().filter(pro -> pro.getSeq() == projectSeq)
             .findFirst();
         if (existOptionalProject.isEmpty()) {
-          projectDto = new ProjectDto().fromResultSet(rs);
+          projectDto = ProjectDto.fromResultSet(rs);
           dto.addProject(projectDto);
         }
       }
@@ -106,9 +114,13 @@ public class DepartmentDao extends AbstractDao {
   }
 
   public Optional<DepartmentDto> findOneByDepartmentName(String departmentName) throws SQLException {
+
+    var acquiredQuery = queryManager.getQuery("SELECT_ONE_DEPARTMENT_WITH_PROJECTS_AND_EMPLOYEES_BY_NAME");
+    if (!acquiredQuery.isEmpty()) {
+      LOGGER.debug("Query is:\n{}", acquiredQuery);
+    }
     try (
-        var pst = conn.prepareStatement(queryManager.getQuery(
-            "SELECT_ONE_DEPARTMENT_WITH_PROJECTS_AND_EMPLOYEES_BY_NAME"))
+        var pst = conn.prepareStatement(acquiredQuery);
     ) {
       pst.setString(1, departmentName);
       var rs = pst.executeQuery();
@@ -116,7 +128,7 @@ public class DepartmentDao extends AbstractDao {
       ProjectDto projectDto;
       EmployeeDto employeeDto;
       while (rs.next()) {
-        var currentDto = new DepartmentDto().fromResultSet(rs);
+        var currentDto = DepartmentDto.fromResultSet(rs);
         if (dto == null || dto.getSeq() != currentDto.getSeq()) {
           dto = currentDto;
         }
@@ -125,7 +137,7 @@ public class DepartmentDao extends AbstractDao {
         var existOptionalEmployee = dto.getEmployeesSet().stream().filter(emp -> emp.getSeq() == employeeSeq)
             .findFirst();
         if (existOptionalEmployee.isEmpty()) {
-          employeeDto = new EmployeeDto().fromResultSet(rs);
+          employeeDto = EmployeeDto.fromResultSet(rs);
           dto.addEmployee(employeeDto);
         }
 
@@ -133,7 +145,7 @@ public class DepartmentDao extends AbstractDao {
         var existOptionalProject = dto.getProjectsSet().stream().filter(pro -> pro.getSeq() == projectSeq)
             .findFirst();
         if (existOptionalProject.isEmpty()) {
-          projectDto = new ProjectDto().fromResultSet(rs);
+          projectDto = ProjectDto.fromResultSet(rs);
           dto.addProject(projectDto);
         }
       }
@@ -144,10 +156,13 @@ public class DepartmentDao extends AbstractDao {
 
 
   public void insertOne(DepartmentDto dto) {
+    var acquiredQuery = queryManager.getQuery("INSERT_DEPARTMENT");
+    if (!acquiredQuery.isEmpty()) {
+      LOGGER.debug("Query is:\n{}", acquiredQuery);
+    }
     try (
-        var pst = conn.prepareStatement(queryManager.getQuery("INSERT_DEPARTMENT"))
+        var pst = conn.prepareStatement(acquiredQuery)
     ) {
-      System.out.println(dto.getDepartmentName());
       pst.setString(1, dto.getDepartmentName());
       if (dto.getLocation() != null) {
         pst.setString(2, dto.getLocation());

@@ -2,11 +2,11 @@ package kr.co.mz.tuturial.jsp.test.create;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import kr.co.mz.tutorial.DataBaseException;
 import kr.co.mz.tutorial.dao.VendorDao;
 import kr.co.mz.tutorial.db.HikariPoolFactory;
 import kr.co.mz.tutorial.db.QueryManager;
 import kr.co.mz.tutorial.dto.VendorDto;
+import kr.co.mz.tutorial.exception.DataBaseException;
 
 public class Create2Vendors {
 
@@ -17,15 +17,8 @@ public class Create2Vendors {
     try {
       var vendorDao = new VendorDao(ds.getConnection(), qm);
 
-      var vendorDto1 = new VendorDto();
-      vendorDto1.setVendorName("Vendor1");
-      vendorDto1.setContact("010-asdf-xcvb");
-      vendorDto1.setCreatedBy("admin");
-
-      var vendorDto2 = new VendorDto();
-      vendorDto2.setVendorName("Vendor2");
-      vendorDto2.setContact("010-arrf-fghb");
-      vendorDto2.setCreatedBy("admin");
+      var vendorDto1 = new VendorDto("Vendor1", "010-asdf-xcvb", "admin");
+      var vendorDto2 = new VendorDto("Vendor2", "010-arrf-fghb", "admin");
 
       vendorDao.insertOne(vendorDto1);
       vendorDao.insertOne(vendorDto2);

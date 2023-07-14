@@ -40,4 +40,14 @@ public abstract class AbstractDto {
   public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
+
+  public AbstractDto(String createdBy, Timestamp createdTime, String modifiedBy, Timestamp modifiedTime) {
+    this.createdBy = createdBy;
+    this.createdTime = createdTime;
+    this.modifiedBy = modifiedBy;
+    this.modifiedTime = modifiedTime;
+  }
+
+  public AbstractDto() {
+  }
 }

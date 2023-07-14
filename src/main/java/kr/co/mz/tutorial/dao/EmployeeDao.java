@@ -9,7 +9,7 @@ import java.util.Optional;
 import kr.co.mz.tutorial.db.QueryManager;
 import kr.co.mz.tutorial.dto.EmployeeDto;
 
-public class EmployeeDao extends AbstractDao {
+public class EmployeeDao {
 
   private Connection conn;
   private final QueryManager queryManager;

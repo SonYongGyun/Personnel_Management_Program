@@ -34,6 +34,24 @@ public class EmployeeDto extends AbstractDto {
     this.vendorSeq = vendorSeq;
   }
 
+  public EmployeeDto(long seq,
+      String employeeName, String positionIs, String phoneNumber, Timestamp hireDate,
+      long departmentSeq,
+      long managerSeq,
+      long vendorSeq,
+      String createdBy, Timestamp createdTime, String modifiedBy, Timestamp modifiedTime
+  ) {
+    super(createdBy, createdTime, modifiedBy, modifiedTime);
+    this.seq = seq;
+    this.employeeName = employeeName;
+    this.positionIs = positionIs;
+    this.phoneNumber = phoneNumber;
+    this.hireDate = hireDate;
+    this.departmentSeq = departmentSeq;
+    this.managerSeq = managerSeq;
+    this.vendorSeq = vendorSeq;
+  }
+
   public long getSeq() {
     return seq;
   }
@@ -154,24 +172,22 @@ public class EmployeeDto extends AbstractDto {
     joinedProjectSet.add(projectDto);
   }
 
-  public EmployeeDto fromResultSet(ResultSet rs) {
+  public static EmployeeDto fromResultSet(ResultSet rs) {
     try {
-      var employeeDto = new EmployeeDto();
-      employeeDto.setSeq(rs.getLong("E.seq"));
-      employeeDto.setEmployeeName(rs.getString("E.employee_name"));
-      employeeDto.setPositionIs(rs.getString("E.position_is"));
-      employeeDto.setPhoneNumber(rs.getString("E.phone_number"));
-      employeeDto.setHireDate(rs.getTimestamp("E.hire_date"));
-      employeeDto.setDepartmentSeq(rs.getLong("E.department_seq"));
-      employeeDto.setManagerSeq(rs.getLong("E.manager_seq"));
-      employeeDto.setVendorSeq(rs.getLong("E.vendor_seq"));
-
-      employeeDto.setCreatedBy(rs.getString("E.created_by"));
-      employeeDto.setCreatedTime(rs.getTimestamp("E.created_time"));
-      employeeDto.setModifiedBy(rs.getString("E.modified_by"));
-      employeeDto.setModifiedTime(rs.getTimestamp("E.modified_time"));
-
-      return employeeDto;
+      return new EmployeeDto(
+          rs.getLong("E.seq"),
+          rs.getString("E.employee_name"),
+          rs.getString("E.position_is"),
+          rs.getString("E.phone_number"),
+          rs.getTimestamp("E.hire_date"),
+          rs.getLong("E.department_seq"),
+          rs.getLong("E.manager_seq"),
+          rs.getLong("E.vendor_seq"),
+          rs.getString("E.created_by"),
+          rs.getTimestamp("E.created_time"),
+          rs.getString("E.modified_by"),
+          rs.getTimestamp("E.modified_time")
+      );
     } catch (SQLException sqle) {
       System.out.println("Failed to build employeeDto from resultSet: " + sqle.getMessage());
       sqle.printStackTrace();

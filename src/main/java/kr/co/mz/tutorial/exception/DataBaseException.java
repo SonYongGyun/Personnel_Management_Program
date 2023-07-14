@@ -1,4 +1,4 @@
-package kr.co.mz.tutorial;
+package kr.co.mz.tutorial.exception;
 
 public class DataBaseException extends RuntimeException {
 

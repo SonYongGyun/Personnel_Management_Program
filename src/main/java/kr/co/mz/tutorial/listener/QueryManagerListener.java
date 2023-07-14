@@ -1,6 +1,6 @@
 package kr.co.mz.tutorial.listener;
 
-import static kr.co.mz.tutorial.Constants.DATASOURCE_CONTEXT_KEY;
+import static kr.co.mz.tutorial.Constants.QUERY_MANAGER_CONTEXT_KEY;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -11,7 +11,7 @@ public class QueryManagerListener implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent sce) {
     var queryManager = new QueryManager();
-    sce.getServletContext().setAttribute(DATASOURCE_CONTEXT_KEY, queryManager);
+    sce.getServletContext().setAttribute(QUERY_MANAGER_CONTEXT_KEY, queryManager);
   }
 
   @Override

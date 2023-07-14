@@ -1,8 +1,5 @@
 package kr.co.mz.tutorial.servlet;
 
-import static kr.co.mz.tutorial.Constants.DATASOURCE_CONTEXT_KEY;
-import static kr.co.mz.tutorial.Constants.QUERYMANAGER_CONTEXT_KEY;
-
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -10,27 +7,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.List;
-import javax.sql.DataSource;
-import kr.co.mz.tutorial.DataBaseException;
-import kr.co.mz.tutorial.dao.DepartmentDao;
-import kr.co.mz.tutorial.db.QueryManager;
 import kr.co.mz.tutorial.dto.DepartmentDto;
 import kr.co.mz.tutorial.dto.EmployeeDto;
 import kr.co.mz.tutorial.dto.ProjectDto;
+import kr.co.mz.tutorial.service.DepartmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class DepartmentListServlet extends HttpServlet {
 
-  private DataSource dataSource;
-  private QueryManager queryManager;
+  private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentListServlet.class);
 
   @Override
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
-    dataSource = (DataSource) getServletContext().getAttribute(DATASOURCE_CONTEXT_KEY);
-    queryManager = (QueryManager) getServletContext().getAttribute(QUERYMANAGER_CONTEXT_KEY);
+    LOGGER.debug("DepartmentListServlet Class is registered.");
   }
 
   @Override
@@ -38,48 +31,51 @@ public class DepartmentListServlet extends HttpServlet {
       throws IOException {
     response.setCharacterEncoding("UTF-8");
     response.setContentType("text/html;charset=UTF-8");
-    List<DepartmentDto> list;
+
+    List<DepartmentDto> list = new DepartmentService(getServletContext()).findAll();
     try (
         PrintWriter out = response.getWriter();
     ) {
-      list = findAll();
       out.println("<html><body>");
       for (DepartmentDto d : list) {
-        out.println("<p>Department Name: " + d.toHalfString() + "</p>");
+        out.println("<h1>Department Name: " + d.getDepartmentName() + "</h1>");
+        out.println("<p>Department Name: " + d.toStringWithOutSet() + "</p>");
 
+        out.println("<p>Managing Projects</p>");
         for (ProjectDto project : d.getProjectsSet()) {
           out.println(
-              "<button onclick=\"location.href='/findOneProject?key=" + project.getSeq()
+              "<button onclick=\"location.href='/find-one/project?key=" + d.getSeq()
                   + "&find=bySeq';\"> See " + project.getProjectName() + " Details </button>");
         }
+        out.println("<br >");
 
+        out.println("<p>Employees</p>");
         for (EmployeeDto employee : d.getEmployeesSet()) {
           out.println(
-              "<button onclick=\"location.href='/findOneEmployee?key=" + employee.getSeq()
-                  + "&find=bySeq';\"> See " + employee.getEmployeeName() + " Details </button>");
+              "<button onclick=\"location.href='/find-one/employee?key=" + d.getSeq() + "&find=bySeq';\"> See "
+                  + employee.getEmployeeName() + " Details </button>");
         }
       }
       out.println("</body></html>");
     }
-
   }
 
-  private List<DepartmentDto> findAll() {
-    try (
-        var conn = dataSource.getConnection();
-    ) {
-      var dao = new DepartmentDao(conn, queryManager);
-      return dao.findAll();
-    } catch (SQLException sqle) {
-      throw new DataBaseException("데이터베이스 커넥션 오류가 났습니다: " + sqle.getMessage(), sqle);
-    }
-  }
+//  private List<DepartmentDto> findAll() {
+//    try (
+//        var conn = hikariDataSource.getConnection();
+//    ) {
+//      var dao = new DepartmentDao(conn, queryManager);
+//      return dao.findAll();
+//    } catch (SQLException sqle) {
+//      throw new DataBaseException("데이터베이스 커넥션 오류가 났습니다: " + sqle.getMessage(), sqle);
+//    }
+//  }
 
 //  @Override  listener 가 대신 해준다.
 //  public void destroy() {
 //    super.destroy();
-//    if (dataSource != null) {
-//      var hikariDataSource = (HikariDataSource) dataSource;
+//    if (hikariDataSource != null) {
+//      var hikariDataSource = (HikariDataSource) hikariDataSource;
 //      hikariDataSource.close();
 //    }
 //  }

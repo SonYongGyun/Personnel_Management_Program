@@ -8,27 +8,28 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EncodingFilter implements Filter {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(EncodingFilter.class);
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
     Filter.super.init(filterConfig);
-    System.out.println("Start Filter");
-
+    LOGGER.debug("EncodingFilter is registered.");
   }
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
     request.setCharacterEncoding("UTF-8");
-    System.out.println("Filtered anyway....");
     chain.doFilter(request, response);
   }
 
   @Override
   public void destroy() {
-    System.out.println("Destroy Filter");
     Filter.super.destroy();
   }
 }

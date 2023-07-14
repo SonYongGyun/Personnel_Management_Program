@@ -4,9 +4,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import kr.co.mz.tutorial.db.QueryManager;
 import kr.co.mz.tutorial.dto.ProjectDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ProjectDao extends AbstractDao {
+public class ProjectDao {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProjectDao.class);
   private Connection conn;
   private final QueryManager queryManager;
 
@@ -15,9 +18,13 @@ public class ProjectDao extends AbstractDao {
     this.queryManager = queryManager;
   }
 
-  public void insertOne(ProjectDto projectDto) {
+  public void insertOne(ProjectDto projectDto) throws SQLException {
+    var acquiredQuery = queryManager.getQuery("INSERT_PROJECT");
+    if (!acquiredQuery.isEmpty()) {
+      LOGGER.debug("Query is\n{}", acquiredQuery);
+    }
     try (
-        var pst = conn.prepareStatement(queryManager.getQuery("INSERT_PROJECT"))
+        var pst = conn.prepareStatement(acquiredQuery)
     ) {
       pst.setString(1, projectDto.getProjectName());
       pst.setString(2, projectDto.getProjectDescription());
@@ -25,27 +32,21 @@ public class ProjectDao extends AbstractDao {
       pst.setBigDecimal(4, projectDto.getBudget());
       pst.setString(5, projectDto.getCreatedBy());
       var rs = pst.executeUpdate();
-      System.out.println("Insert into project is complete for " + rs + " rows.");
-    } catch (SQLException sqle) {
-      System.out.println("Failed to insert." + sqle.getMessage());
-      sqle.printStackTrace();
+      LOGGER.debug("Insert into project is complete for " + rs + " rows.");
     }
   }
 
-  public void deleteOneBySeq(long seq) {
+  public void deleteOneBySeq(long seq) throws SQLException {
     try (
         var pst = conn.prepareStatement(queryManager.getQuery("DELETE_ONE_PROJECT"))
     ) {
       pst.setLong(1, seq);
       var rs = pst.executeUpdate();
       System.out.println("Delete from project is complete for " + rs + " rows.");
-    } catch (SQLException sqle) {
-      System.out.println("Failed to delete." + sqle.getMessage());
-      sqle.printStackTrace();
     }
   }
 
-  public void assignToDepartment(long departmentSeq, long projectSeq) {
+  public void assignToDepartment(long departmentSeq, long projectSeq) throws SQLException {
     try (
         var pst = conn.prepareStatement(queryManager.getQuery("INSERT_DP_RELATIONSHIP"))
     ) {
@@ -54,12 +55,10 @@ public class ProjectDao extends AbstractDao {
       var rs = pst.executeUpdate();
 
       System.out.println("Project is assigned for " + rs + " department.");
-    } catch (SQLException sqle) {
-      sqle.printStackTrace();
     }
   }
 
-  public void assignToEmployee(long employeeSeq, long projectSeq) {
+  public void assignToEmployee(long employeeSeq, long projectSeq) throws SQLException {
     try (
         var pst = conn.prepareStatement(queryManager.getQuery("INSERT_EP_RELATIONSHIP"))
     ) {
@@ -67,8 +66,6 @@ public class ProjectDao extends AbstractDao {
       pst.setLong(2, projectSeq);
       var rs = pst.executeUpdate();
       System.out.println("Project is assigned for " + rs + " employee.");
-    } catch (SQLException sqle) {
-      sqle.printStackTrace();
     }
   }
 
